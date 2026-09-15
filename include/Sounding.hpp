@@ -15,6 +15,26 @@ public:
     ~Sounding();
 
 
+    std::vector<double> get_mu_parcel_buoyancy() {
+        return mu_parcel_buoyancy;
+    }
+    std::vector<double> get_ml_parcel_buoyancy() {
+        return ml_parcel_buoyancy;
+    }
+    std::vector<double> get_sb_parcel_buoyancy() {
+        return sb_parcel_buoyancy;
+    }
+
+    std::vector<double> get_mu_entrainment_parcel_buoyancy() {
+        return mu_entrainment_buoyancy;
+    }
+    std::vector<double> get_ml_entrainment_parcel_buoyancy() {
+        return ml_entrainment_buoyancy;
+    }
+    std::vector<double> get_sb_entrainment_parcel_buoyancy() {
+        return sb_entrainment_buoyancy;
+    }
+
     //Gets height averages RH between heights
     double get_rh(int min_height, int max_height) {
         int i = 0;
@@ -322,16 +342,6 @@ public:
     }
     std::vector<double> get_interpolated_height() {
         return interpolated_height;
-    }
-    std::vector<double> get_sb_entrainment_buoyancy() {
-        return sb_entrainment_buoyancy;
-    }
-    std::vector<double> get_sb_parcel_buoyancy() {
-        return sb_parcel_buoyancy;
-    }
-    
-    std::vector<double> get_sb_buoyancy() {
-        return sb_parcel_buoyancy;
     }
     
     [[nodiscard]] double get_sb_e_tilde() const {
@@ -985,6 +995,7 @@ Sounding::Sounding(std::string sounding_file_name, bool needs_interpolation, boo
 
     sounding_file.close();
 
+    //Set lowest height to 0
     for (int i = (int) height.size() - 1; i > 0; i--) {
         height[i] -= height[0];
     }

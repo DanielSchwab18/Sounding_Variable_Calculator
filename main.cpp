@@ -25,12 +25,13 @@ fs::path get_long_path(const fs::path& relative_or_absolute_path) {
 
 int main()
 {
-    /*
-    std::string file = "/Users/danielschwab/Desktop/Purdue/Research/Chavas Spring 2025/soundings modified interpolated/2014052206_H_100_38.69_-099.98_KS_KDDC_102_00100010_MS1_0_2293_-0061_1166_049.4_042.7_034.0_0567_0430_18.8_15.1_5.2_7.9_1.36_1.0_2.1_capecalc";
     
-    Sounding s = Sounding(file, false, false);
-    */
+    std::string file = "C:/Users/danie/Desktop/Purdue/Research/Chavas Summer 2025/Sounding Variable Calculator/Sounding Variable Calculator/example";
+    
+    Sounding s = Sounding(file, false, false, 100);
+    std::cout << s.get_sbcape() << std::endl;
 
+    /*
     //EveryLevelBuoyancy e = EveryLevelBuoyancy();
     //e.get_every_level_buoyancy();
     //return 0;
@@ -167,7 +168,7 @@ int main()
     
     outfile.close();
     errfile.close();
-    
+    */
     return 0;
 }
 
