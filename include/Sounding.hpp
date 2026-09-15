@@ -35,6 +35,26 @@ public:
         return sb_entrainment_buoyancy;
     }
 
+    std::vector<double> get_mu_parcel_temp() {
+        return mu_parcel_temp;
+    }
+    std::vector<double> get_ml_parcel_temp() {
+        return ml_parcel_temp;
+    }
+    std::vector<double> get_sb_parcel_temp() {
+        return sb_parcel_temp;
+    }
+
+    std::vector<double> get_mu_entrainment_parcel_temp() {
+        return mu_entrainment_temp;
+    }
+    std::vector<double> get_ml_entrainment_parcel_temp() {
+        return ml_entrainment_temp;
+    }
+    std::vector<double> get_sb_entrainment_parcel_temp() {
+        return sb_entrainment_temp;
+    }
+
     //Gets height averages RH between heights
     double get_rh(int min_height, int max_height) {
         int i = 0;
@@ -695,8 +715,8 @@ public:
     double compute_stp() {
         double term1 = ml_cape / 1500.0;
 
-        double EBWD_u = interpolated_wind_u[sb_el / resolution] - interpolated_wind_u[sb_lfc / resolution];
-        double EBWD_v = interpolated_wind_v[sb_el / resolution] - interpolated_wind_v[sb_lfc / resolution];
+        double EBWD_u = interpolated_wind_u[(sb_el / 2) / resolution] - interpolated_wind_u[sb_lfc / resolution];
+        double EBWD_v = interpolated_wind_v[(sb_el / 2) / resolution] - interpolated_wind_v[sb_lfc / resolution];
         double EBWD = std::pow(EBWD_u * EBWD_u + EBWD_v * EBWD_v, 0.5);
         double term2 = EBWD / 20.0;
 
@@ -723,6 +743,14 @@ public:
             term2 = 1.5;
         } else if (EBWD < 12.5) {
             term2 = 0.0;
+        }
+
+        if (SRH < 0) {
+            term3 = 0;
+        }
+
+        if(term1 * term2 * term3 * term4 * term5 < 0) {
+            return 0.0;
         }
 
         return term1 * term2 * term3 * term4 * term5;
@@ -882,6 +910,14 @@ private:
     std::vector<double> mu_entrainment_buoyancy;
     std::vector<double> ml_entrainment_buoyancy;
     std::vector<double> sb_entrainment_buoyancy;
+
+    std::vector<double> mu_parcel_temp;
+    std::vector<double> ml_parcel_temp;
+    std::vector<double> sb_parcel_temp;
+
+    std::vector<double> mu_entrainment_temp;
+    std::vector<double> ml_entrainment_temp;
+    std::vector<double> sb_entrainment_temp;
 
     int resolution;
 
@@ -1689,6 +1725,7 @@ void Sounding::calc_sbparcel_path() {
     for (int i = 0; i < T_lif.size(); i++) {
         T_rho_lif.push_back(T_lif[i] * (1.0 + (R_v/R_d) * Q_v_lif[i] - Q_t_lif[i]));
         T_0_lif.push_back(temperature[i] * (1.0 + (R_v/R_d - 1) * specific_humidity[i]));
+        sb_parcel_temp.push_back(T_lif[i]);
     }
     for (int i = 0; i < T_rho_lif.size(); i++) {
         sb_parcel_buoyancy.push_back(g * (T_rho_lif[i] - T_0_lif[i]) / T_0_lif[i]);
@@ -2064,6 +2101,7 @@ void Sounding::calc_sb_entrainment_buoyancy() {
     for (int i = 0; i < T_lif.size(); i++) {
         T_rho_lif.push_back(T_lif[i] * (1.0 + (R_v / R_d) * Q_v_lif[i] - Q_t_lif[i]));
         T_0_lif.push_back(temperature[i] * (1.0 + (R_v / R_d - 1) * specific_humidity[i]));
+        sb_entrainment_temp.push_back(T_lif[i]);
     }
     
     /*
@@ -2348,6 +2386,7 @@ void Sounding::calc_mlparcel_path() {
     for (int i = 0; i < T_lif.size(); i++) {
         T_rho_lif.push_back(T_lif[i] * (1.0 + (R_v/R_d) * Q_v_lif[i] - Q_t_lif[i]));
         T_0_lif.push_back(temperature[i] * (1.0 + (R_v/R_d - 1) * specific_humidity[i]));
+        ml_parcel_temp.push_back(T_lif[i]);
     }
     
     for (int i = 0; i < T_rho_lif.size(); i++) {
@@ -2542,6 +2581,7 @@ void Sounding::calc_ml_entrainment_buoyancy() {
     for (int i = 0; i < T_lif.size(); i++) {
         T_rho_lif.push_back(T_lif[i] * (1.0 + (R_v / R_d) * Q_v_lif[i] - Q_t_lif[i]));
         T_0_lif.push_back(temperature[i] * (1.0 + (R_v / R_d - 1) * specific_humidity[i]));
+        ml_entrainment_temp.push_back(T_lif[i]);
     }
     
     for (int i = 0; i < T_rho_lif.size(); i++) {
@@ -2619,6 +2659,7 @@ void Sounding::calc_muparcel_path() {
     for (int i = 0; i < T_lif.size(); i++) {
         T_rho_lif.push_back(T_lif[i] * (1.0 + (R_v/R_d) * Q_v_lif[i] - Q_t_lif[i]));
         T_0_lif.push_back(temperature[i] * (1.0 + (R_v/R_d - 1) * specific_humidity[i]));
+        mu_parcel_temp.push_back(T_lif[i]);
     }
     
     for (int i = 0; i < T_rho_lif.size(); i++) {
@@ -2812,6 +2853,7 @@ void Sounding::calc_mu_entrainment_buoyancy() {
     for (int i = 0; i < T_lif.size(); i++) {
         T_rho_lif.push_back(T_lif[i] * (1.0 + (R_v / R_d) * Q_v_lif[i] - Q_t_lif[i]));
         T_0_lif.push_back(temperature[i] * (1.0 + (R_v / R_d - 1) * specific_humidity[i]));
+        mu_entrainment_temp.push_back(T_lif[i]);
     }
     
     for (int i = 0; i < T_rho_lif.size(); i++) {
