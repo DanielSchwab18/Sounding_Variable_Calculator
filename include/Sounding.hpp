@@ -720,6 +720,8 @@ public:
         double EBWD = std::pow(EBWD_u * EBWD_u + EBWD_v * EBWD_v, 0.5);
         double term2 = EBWD / 20.0;
 
+        std::cout << EBWD << std::endl;
+
         double SRH = get_srh(0, 500);
         double term3 = SRH / 75.0;
 
@@ -747,10 +749,6 @@ public:
 
         if (SRH < 0) {
             term3 = 0;
-        }
-
-        if(term1 * term2 * term3 * term4 * term5 < 0) {
-            return 0.0;
         }
 
         return term1 * term2 * term3 * term4 * term5;

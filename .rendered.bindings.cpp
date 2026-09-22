@@ -42,5 +42,13 @@ PYBIND11_MODULE(bindings, m) {
         .def("get_srw", &Sounding::get_srw)
         .def("get_srh", &Sounding::get_srh)
         .def("get_shear", &Sounding::get_shear)
-        .def("get_streamwise_vorticity", &Sounding::get_streamwise_vorticity);
+        .def("get_streamwise_vorticity", &Sounding::get_streamwise_vorticity)
+
+        //capes
+        .def("get_sbcape", &Sounding::get_sbcape)
+        .def("get_mlcape", &Sounding::get_mlcape)
+        .def("get_mucape", &Sounding::get_mucape)
+        .def("get_sbecape", &Sounding::get_sbecape)
+        .def("get_mlecape", &Sounding::get_mlecape)
+        .def("get_muecape", &Sounding::get_muecape);
 }
